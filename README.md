@@ -2,14 +2,6 @@
 
 Este é o meu arquivo de configuração do Bash, que contém várias configurações e atalhos úteis para aprimorar a minha experiência com o terminal. 
 
-## Instalação
-
-Para usar este arquivo, basta clonar o repositório e copiar o arquivo .bashrc para o diretório home do seu usuário.
-
-$ git clone https://github.com/seu-usuario/bash-config.git
-
-$ cp bash-config/.bashrc ~/
-
 ## Conteúdo do Arquivo
 
 O arquivo .bashrc inclui várias configurações, como:
