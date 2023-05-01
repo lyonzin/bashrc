@@ -204,12 +204,12 @@ HISTFILESIZE=2000
 if [ $EUID -eq 0 ]; then
 
     ## Cores e efeitos do Usuario root
-    PS1="$BR╔══[$BW$USER$BR]$BY@$BR[$BW'HARDWAY'$BR]$BW: \w\n$BR╚══>$BR \\$ $NONE"
+    PS1="$BR╔══[$BW$USER$BR]$BY@$BR[$BW'HARDWAY'$BR]$BW: \w\n$BR╚══▶$BR \\$ $NONE"
 
 else
 
     ## Cores e efeitos do usuário comum
-    PS1="$BB╔══[$BW'Lyon.'$BB]$BY@$BB[$BW'HARDWAY'$BB]$BW: \w\n$BB╚══>$BB \\$ $NONE"
+    PS1="$BB╔══[$BW'Lyon.'$BB]$BY@$BB[$BW'HARDWAY'$BB]$BW: \w\n$BB╚══▶$BB \\$ $NONE"
 
 fi # Fim da condição if
 
