@@ -7,6 +7,7 @@ Este é o meu arquivo de configuração do Bash, que contém várias configuraç
 Para usar este arquivo, basta clonar o repositório e copiar o arquivo .bashrc para o diretório home do seu usuário.
 
 $ git clone https://github.com/seu-usuario/bash-config.git
+
 $ cp bash-config/.bashrc ~/
 
 ## Conteúdo do Arquivo
