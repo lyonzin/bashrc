@@ -24,4 +24,4 @@ Fique à vontade para contribuir com este projeto, enviando sugestões de melhor
 
 ## Autor
 
-Criado por Seu Nome - [seuemail@email.com](mailto:seuemail@email.com)
+Criado por Lyon.
