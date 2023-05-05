@@ -38,6 +38,7 @@ C="\[\033[0;36m\]" # Cyan (Ciano - Azul Claro)
 W="\[\033[0;37m\]" # White (Branco)
 NONE='\[\033[0m\]'     # Reset
 
+
 # Definindo variáveis de cores
 BK="\[\033[1;30m\]" # Bold+Black (Negrito+Preto)
 BR="\[\033[1;31m\]" # Bold+Red (Negrito+Vermelho)
@@ -212,6 +213,8 @@ else
     PS1="$BB╔══[$BW'Lyon.'$BB]$BY@$BB[$BW'HARDWAY'$BB]$BW: \w\n$BB╚══▶$BB \\$ $NONE"
 
 fi # Fim da condição if
+
+
 
 #==============================
 #    Automações e Atalhos     #
@@ -466,6 +469,7 @@ function jsonview() {
     cat "$1" | jq '.' | less
 }
 
+
 #==============================================================#
 #                 Descobrir meu ip Publico                     #
 #==============================================================#
@@ -483,6 +487,7 @@ function findfile() {
     fi
     find . -type f -iname "*$1*"
 }
+
 
 #==============================================================#
 #                 Aliases (apelidos) diversos                  #
@@ -551,6 +556,9 @@ alias www='python3 -m http.server 4455'
 # Reparar o apt-get
 alias aptrepair='sudo apt-get -f install'
 
+# Reparar o apt-get
+alias borapescar='service ssh status'
+
 # Reparar o dpkg
 alias dpkgrepair='sudo dpkg --configure -a'
 
@@ -564,6 +572,22 @@ alias Sudo='sudo'
 alias Resolv='sudo nano /etc/resolv.conf'
 alias RESOLV='sudo nano /etc/resolv.conf'
 alias resolv='sudo nano /etc/resolv.conf'
+
+#===================================================================
+
+#Subir Vpn
+
+alias startvpn='cd /home/kali/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
+alias Startvpn='cd /home/kali/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
+alias STARTVPN='cd /home/kali/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
+
+#===================================================================
+
+#Subir Vpn (Pentest Expirience)
+
+alias startvpn2='cd /home/lyon/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
+alias Startvpn2='cd /home/lyon/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
+alias STARTVPN2='cd /home/lyon/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
 
 #===================================================================
 
