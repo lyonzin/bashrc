@@ -469,7 +469,6 @@ function jsonview() {
     cat "$1" | jq '.' | less
 }
 
-
 #==============================================================#
 #                 Descobrir meu ip Publico                     #
 #==============================================================#
@@ -487,7 +486,6 @@ function findfile() {
     fi
     find . -type f -iname "*$1*"
 }
-
 
 #==============================================================#
 #                 Aliases (apelidos) diversos                  #
@@ -550,7 +548,6 @@ alias ungz='gzip -d '
 # Subir Servidor Web Python
 alias www='python3 -m http.server 4455'
 
-
 #====================================================================
 
 # Reparar o apt-get
@@ -572,22 +569,6 @@ alias Sudo='sudo'
 alias Resolv='sudo nano /etc/resolv.conf'
 alias RESOLV='sudo nano /etc/resolv.conf'
 alias resolv='sudo nano /etc/resolv.conf'
-
-#===================================================================
-
-#Subir Vpn
-
-alias startvpn='cd /home/kali/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
-alias Startvpn='cd /home/kali/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
-alias STARTVPN='cd /home/kali/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
-
-#===================================================================
-
-#Subir Vpn (Pentest Expirience)
-
-alias startvpn2='cd /home/lyon/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
-alias Startvpn2='cd /home/lyon/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
-alias STARTVPN2='cd /home/lyon/fw02-srv-UDP4-1194-ailton20865 && sudo openvpn fw02-srv-UDP4-1194-ailton20865.ovpn'
 
 #===================================================================
 
