@@ -211,7 +211,7 @@ else
 
     ## Cores e efeitos do usuário comum
     #PS1="$BB╔══[$BW'Lyon.'$BB]$BY@$BB[$BW'HARDWAY'$BB]$BW: \w\n$BB╚══▶$BB \\$ $NONE"
-     PS1="$BB╔══[$BW$Hacker$BB$BY@$BB$BW$equipe$BB]-[$BY\T$BB]-[$BW\$(ip route get 1.1.1.1 | awk -F'src ' 'NR==1{split(\$2,a,\" \"); print a[1]}')$BB]$BW-$BB[\[\033[34m\]\w]$BW\n$BB╚>
+     PS1="$BB╔══[$BW$Hacker$BB$BY@$BB$BW$equipe$BB]-[$BY\T$BB]-[$BW\$(ip route get 1.1.1.1 | awk -F'src ' 'NR==1{split(\$2,a,\" \"); print a[1]}')$BB]$BW-$BB[\[\033[34m\]\w]$BW\n$BB╚══▶ \\$ $BW"
 
 fi # Fim da condição if
 
