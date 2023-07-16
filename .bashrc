@@ -25,7 +25,24 @@ echo -e "\033[0m"
 # Váriavies com as Cores
 #===========================================
 
-NONE="\[\033[0m\]" # Eliminar as Cores, deixar padrão)
+Hacker="Lyon"
+
+#Criando Relogio :) By Lyon.
+function format_time {
+    echo $(date +"%H:%M:%S %p")
+}
+
+# Get IP
+function get_ip() {
+    tunnel_ip=$(ifconfig tun0 2>/dev/null | grep 'netmask' | awk '{print $2}')
+    default_ip=$(ifconfig eth0 2>/dev/null | grep 'netmask' | awk '{print $2}')
+    
+    if [[ $tunnel_ip == "10."* ]]; then
+        echo $tunnel_ip
+    else
+        echo $default_ip
+    fi
+}
 
 ## Cores de Fonte
 K="\[\033[0;30m\]" # Black (Preto)
@@ -36,7 +53,7 @@ B="\[\033[0;34m\]" # Blue (Azul)
 M="\[\033[0;35m\]" # Magenta (Vermelho Claro)
 C="\[\033[0;36m\]" # Cyan (Ciano - Azul Claro)
 W="\[\033[0;37m\]" # White (Branco)
-NONE='\[\033[0m\]'     # Reset
+NONE='\[\033[0m\]' # Reset
 
 
 # Definindo variáveis de cores
@@ -204,16 +221,17 @@ HISTFILESIZE=2000
 ## Verifica se é usuário root (EUID=0) ou usuário comum
 if [ $EUID -eq 0 ]; then
 
-    ## Cores e efeitos do Usuario root
-    PS1="$BR╔══[$BW$USER$BR]$BY@$BR[$BW'HARDWAY'$BR]$BW: \w\n$BR╚══▶$BR \\$ $NONE"
+      ## Cores e efeitos do Usuario root
+	PS1="$BR╔══[$BW$USER$BR@$BW$HOSTNAME$BR]-[$BW\$(date +%H:%M:%S)$BR]-[$BW\`get_ip\`$BR]-[$BY\w$BR]$BW\n$BR╚══▶ \\$ $NONE"
 
 else
 
-    ## Cores e efeitos do usuário comum
-    #PS1="$BB╔══[$BW'Lyon.'$BB]$BY@$BB[$BW'HARDWAY'$BB]$BW: \w\n$BB╚══▶$BB \\$ $NONE"
-     PS1="$BB╔══[$BW$Hacker$BB$BY@$BB$BW$equipe$BB]-[$BY\T$BB]-[$BW\$(ip route get 1.1.1.1 | awk -F'src ' 'NR==1{split(\$2,a,\" \"); print a[1]}')$BB]$BW-$BB[\[\033[34m\]\w]$BW\n$BB╚══▶ \\$ $BW"
+      ## Cores e efeitos do usuário comum
+	PS1="$BB╔══[$BW$Hacker$BB@$BW$HOSTNAME$BB]-[$BW\`format_time\`$BB]-[$BW\`get_ip\`$BB]-[$BY\w$BB]$BW\n$BB╚══▶ \\$ $NONE"
+
 
 fi # Fim da condição if
+
 
 #==============================
 #    Automações e Atalhos     #
@@ -304,6 +322,46 @@ peinfo() {
 
     python -c "import pefile; pe = pefile.PE('$file'); print(pe.dump_info())"
 }
+
+
+#=============================================================================#
+#                        instalador de pacotes                                #
+#=============================================================================#
+
+function install_package() {
+    if [ -z "$1" ]; then
+        echo "Usage: install_package <package-name-or-file>"
+        return 1
+    fi
+
+    # Detect the package manager and file type
+    if [ -x "$(command -v apt)" ]; then
+        if [[ "$1" == *.deb ]]; then
+            sudo dpkg -i "$1"
+            sudo apt-get install -f
+        else
+            sudo apt update && sudo apt install -y "$1"
+        fi
+    elif [ -x "$(command -v dnf)" ]; then
+        if [[ "$1" == *.rpm ]]; then
+            sudo dnf install "$1"
+        else
+            sudo dnf install "$1"
+        fi
+    elif [ -x "$(command -v yum)" ]; then
+        if [[ "$1" == *.rpm ]]; then
+            sudo yum localinstall "$1"
+        else
+            sudo yum install "$1"
+        fi
+    elif [ -x "$(command -v pacman)" ]; then
+        sudo pacman -Sy "$1"
+    else
+        echo "Package manager not detected. You must manually install: $1"
+    fi
+}
+
+
 
 #=============================================================================#
 #         enviar um arquivo para o VirusTotal e criar um relatório            #
