@@ -72,11 +72,11 @@ function get_ip() {
     tunnel_ip=$(ifconfig tun0 2>/dev/null | grep 'netmask' | awk '{print $2}')
     default_ip=$(ifconfig eth0 2>/dev/null | grep 'netmask' | awk '{print $2}')
     
-    if [[ $tunnel_ip == "10."* ]]; then
-        echo $tunnel_ip
-    else
-        echo $default_ip
-    fi
+if [[ $tunnel_ip == "10."* ]] || [[ $tunnel_ip == "192.168.100."* ]]; then
+    echo $tunnel_ip
+else
+    echo $default_ip
+fi
 }
 
 #==============================================================#
