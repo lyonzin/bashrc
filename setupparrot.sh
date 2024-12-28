@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#wget -qO- https://raw.githubusercontent.com/lyonzin/bashrc/refs/heads/main/setupparrot.sh | bash
+
+
 # Função para exibir mensagens formatadas
 function print_message {
     echo -e "\n\e[1;34m$1\e[0m\n"
