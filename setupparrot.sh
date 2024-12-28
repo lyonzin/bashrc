@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#wget -qO- https://raw.githubusercontent.com/lyonzin/bashrc/refs/heads/main/setupparrot.sh | bash
-
-
 # Função para exibir mensagens formatadas
 function print_message {
     echo -e "\n\e[1;34m$1\e[0m\n"
@@ -34,12 +31,12 @@ print_message "Configurando o SSH..."
 SSH_CONFIG="/etc/ssh/sshd_config"
 
 sudo sed -i 's/^#Port 22/Port 22/' $SSH_CONFIG
-sudo sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin no/' $SSH_CONFIG
+sudo sed -i 's/^#PermitRootLogin prohibit-password/PermitRootLogin yes/' $SSH_CONFIG
 sudo sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' $SSH_CONFIG
 sudo sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' $SSH_CONFIG
 
 # Adiciona usuários permitidos (altere "seu_usuario" conforme necessário)
-ALLOWED_USERS="seu_usuario"
+ALLOWED_USERS="lyon"
 if ! grep -q "AllowUsers $ALLOWED_USERS" $SSH_CONFIG; then
     echo "AllowUsers $ALLOWED_USERS" | sudo tee -a $SSH_CONFIG
 fi
@@ -48,5 +45,12 @@ fi
 print_message "Reiniciando o serviço SSH para aplicar as alterações..."
 sudo systemctl restart ssh
 
-# Teste de conexão SSH
-print_message "Configuração do SSH concluída! Teste conectando com: ssh $ALLOWED_USERS@seu_ip"
+# Configurando a senha do root
+print_message "Configurando a senha do root..."
+echo -e "94823176\n94823176" | sudo passwd root
+
+# Configurando a senha do usuário lyon
+print_message "Configurando a senha do usuário lyon..."
+echo -e "94823176\n94823176" | sudo passwd lyon
+
+print_message "Senhas configuradas com sucesso! Teste conectando com: ssh root@seu_ip ou ssh lyon@seu_ip"
