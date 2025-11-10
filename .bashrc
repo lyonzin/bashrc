@@ -1,4 +1,8 @@
+
 export PATH=~/.local/bin:/snap/bin:/usr/sandbox/:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/share/games:/usr/local/sbin:/usr/sbin:/sbin:$PATH
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+
 #------------------------------------- INICIO DOS BANNERS ---------------------------------------
 
 if [[ $(whoami) == 'root' ]]; then
@@ -275,12 +279,12 @@ HISTFILESIZE=2000
 if [ $EUID -eq 0 ]; then
 
       ## Cores e efeitos do Usuario root
-	PS1="$BR╔══[$BW$USER$BR@$BW$HOSTNAME$BR]-[$BW\$(date +%H:%M:%S)$BR]-[$BW\`get_ip\`$BR]-[$BY\w$BR]$BW\n$BR╚══▶ \\$ $NONE"
+	PS1="$BR┌──[$BW$USER$BR@$BW$HOSTNAME$BR]-[$BW\$(date +%H:%M:%S)$BR]-[$BW\`get_ip\`$BR]-[$BY\w$BR]$BW\n$BR└──▶ \\$ $NONE"
 
 else
 
       ## Cores e efeitos do usuário comum
-	PS1="$BB╔══[$BW$Hacker$BB@$BW$HOSTNAME$BB]-[$BW\$(date +%H:%M:%S)$BB]-[$BW\`get_ip\`$BB]-[$BY\w$BB]$BW\n$BB╚══▶ \\$ $NONE"
+	PS1="$BB┌──[$BW$Hacker$BB@$BW$HOSTNAME$BB]-[$BW\$(date +%H:%M:%S)$BB]-[$BW\`get_ip\`$BB]-[$BY\w$BB]$BW\n$BB└──▶ \\$ $NONE"
 
 
 fi # Fim da condição if
@@ -715,6 +719,163 @@ alias Boranessus='sudo systemctl start nessusd.service'
 #===================================================================
 #nano com numeros de linhas
 alias nano='nano -c -l'
+
+# =====================[ Show-Menu ]=====================
+
+# ── Configurações de tema (azul padrão / vermelho se root)
+if [[ $EUID -eq 0 ]]; then
+  BORDER_COL=$'\033[31m'   # vermelho
+  CMD_COL=$'\033[1;4;31m'  # vermelho, bold+underline
+else
+  BORDER_COL=$'\033[34m'   # azul
+  CMD_COL=$'\033[1;4;34m'  # azul, bold+underline
+fi
+TEXT_COL=$'\033[37m'       # branco
+RESET=$'\033[0m'
+
+# Largura interna fixa (entre as bordas). Pode ajustar aqui se quiser.
+MENU_WIDTH=${MENU_WIDTH:-69}   # igual vibe do seu PS
+LEFT_COL=22                    # largura da coluna "[+] comando"
+# RIGHT_COL é calculada para completar a linha
+RIGHT_COL=$(( MENU_WIDTH - LEFT_COL - 5 ))  # " " + LEFT + " │ " + RIGHT + " "
+
+# ──────────────────────────────────────────────────────────────
+#  Utilitário para repetir caracteres Unicode sem quebrar UTF-8
+# ──────────────────────────────────────────────────────────────
+_repeat() {
+  local char="$1" count="$2"
+  # usa printf + head + sed (preserva UTF-8 mesmo em bash antigo)
+  printf "%${count}s" "" | sed "s/ /${char}/g"
+}
+
+# ──────────────────────────────────────────────────────────────
+#  Bordas (UTF-8 seguro, não depende de fonte quebre)
+# ──────────────────────────────────────────────────────────────
+_line_top() {
+  printf "${BORDER_COL}┏"
+  _repeat "━" "$MENU_WIDTH"
+  printf "┓${RESET}\n"
+}
+
+_line_mid() {
+  printf "${BORDER_COL}┣"
+  _repeat "━" "$MENU_WIDTH"
+  printf "┫${RESET}\n"
+}
+
+_line_bottom() {
+  printf "${BORDER_COL}┗"
+  _repeat "━" "$MENU_WIDTH"
+  printf "┛${RESET}\n"
+}
+
+# ──────────────────────────────────────────────────────────────
+#  Centralizar texto (UTF-8 safe e sem cálculo errado)
+# ──────────────────────────────────────────────────────────────
+_center() {
+  local text="$1"
+  local w="$MENU_WIDTH"
+  local stripped_len=$(echo -n "$text" | wc -m)
+  (( stripped_len > w )) && text="${text:0:$w}"
+
+  local padL=$(( (w - stripped_len) / 2 ))
+  local padR=$(( w - stripped_len - padL ))
+
+  printf "${BORDER_COL}┃${RESET}"
+  printf "%*s" "$padL" ""
+  printf "%s" "$text"
+  printf "%*s" "$padR" ""
+  printf "${BORDER_COL}┃${RESET}\n"
+}
+
+# Linha de duas colunas no padrão: "║  [LEFT...] │ [RIGHT...]  ║"
+_print_row() {
+  local left_plain="$1" right_plain="$2"
+
+  # truncar se exceder
+  (( ${#left_plain}  > LEFT_COL  )) && left_plain="${left_plain:0:$((LEFT_COL-1))}…"
+  (( ${#right_plain} > RIGHT_COL )) && right_plain="${right_plain:0:$((RIGHT_COL-1))}…"
+
+  local padL=$(( LEFT_COL  - ${#left_plain} ))
+  local padR=$(( RIGHT_COL - ${#right_plain} ))
+
+  printf "${BORDER_COL}┃${RESET} "
+  printf "${CMD_COL}%s${RESET}%*s"  "$left_plain"  "$padL" ""
+  printf " ${BORDER_COL}┃${RESET} "
+  printf "${TEXT_COL}%s${RESET}%*s" "$right_plain" "$padR" ""
+  printf " ${BORDER_COL}┃${RESET}\n"
+}
+
+# Cabeçalhos das colunas (sem códigos de cor pra manter alinhamento perfeito)
+_header_row() {
+  local L="[    Modulos   ]"
+  local R="[    Descrição   ]"
+  local padL=$(( LEFT_COL  - ${#L} ))
+  local padR=$(( RIGHT_COL - ${#R} ))
+
+  printf "${BORDER_COL}┃${RESET} "
+  printf "%s%*s" "$L" "$padL" ""
+  printf " ${BORDER_COL}┃${RESET} "
+  printf "%s%*s" "$R" "$padR" ""
+  printf " ${BORDER_COL}┃${RESET}\n"
+}
+
+# Só imprime itens que existem (função/alias/comando)
+_has() { type -t "$1" >/dev/null 2>&1; }
+
+show_menu() {
+  _line_top
+  _center "MENU DE MODULOS"
+  _line_mid
+  _header_row
+  _line_mid
+
+  _has extrair        && _print_row "[+] - extrair"        "Extrair arquivos compactados (zip, rar, 7z, tar.*)"
+  _has instalar       && _print_row "[+] - instalar"       "Instalar pacote ou .deb/.rpm (auto-detect)"
+  _has find_string    && _print_row "[+] - find_string"    "Buscar string em arquivos (grep -rnw)"
+  _has encode_base64  && _print_row "[+] - encode_base64"  "Codificar strings em Base64"
+  _has decode_base64  && _print_row "[+] - decode_base64"  "Decodificar strings em Base64"
+  _has extrair_ip     && _print_row "[+] - extrair_ip"     "Extrair IPs de um arquivo"
+  _has service_status && _print_row "[+] - service_status" "Status de serviço (systemd)"
+  _has sshtunnel      && _print_row "[+] - sshtunnel"      "Criar túnel SSH local → remoto"
+  _has qr             && _print_row "[+] - qr"             "Gerar QR Code a partir de uma string"
+  _has maclookup      && _print_row "[+] - maclookup"      "Identificar fabricante de MAC Address"
+  _has auto_startup   && _print_row "[+] - auto_startup"   "Habilitar serviço para iniciar automaticamente"
+  _has check_hash     && _print_row "[+] - check_hash"     "Verificar tipo de hash"
+  _has ffind          && _print_row "[+] - ffind"          "Encontrar arquivos rapidamente"
+  _has jsonview       && _print_row "[+] - jsonview"       "Visualizar JSON formatado (jq)"
+  command -v curl >/dev/null 2>&1 && _print_row "[+] - myip"        "Mostrar IP público (curl ifconfig.me)"
+  _has findfile       && _print_row "[+] - findfile"       "Buscar arquivo por nome (variante)"
+  _has updatefull     && _print_row "[+] - updatefull"     "Atualizar todos os pacotes instalados"
+
+  _line_mid
+  _center "Versão: 1.0   •   By: ${Hacker:-Lyon}"
+  _line_bottom
+}
+
+# Atalhos
+alias menu='show_menu'
+alias show-menu='show_menu'
+alias Show-Menu='show_menu'
+
+# Mostra 1x por sessão e reimprime ao trocar de usuário
+if [[ $- == *i* ]]; then
+  if [[ -z "${_MENU_SHOWN_ON_START}" ]]; then
+    _MENU_SHOWN_ON_START=1; show_menu
+  fi
+  _LAST_USER_FOR_MENU="$USER"
+  _show_menu_if_user_changed() {
+    if [[ "$_LAST_USER_FOR_MENU" != "$USER" ]]; then
+      _LAST_USER_FOR_MENU="$USER"; show_menu
+    fi
+  }
+  if [[ -n "$PROMPT_COMMAND" ]]; then
+    PROMPT_COMMAND="_show_menu_if_user_changed; $PROMPT_COMMAND"
+  else
+    PROMPT_COMMAND="_show_menu_if_user_changed"
+  fi
+fi
+# ===================[ Show-Menu ]======================
 
 #===================================================================
 # enable programmable completion features (you don't need to enable
